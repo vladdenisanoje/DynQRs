@@ -3,6 +3,97 @@
 <head>
   <meta charset="utf-8">
   <title>Redirect cu fundal personalizat</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: sans-serif;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background-color: #111; /* culoarea de fundal (se vede în jurul imaginii pătrate) */
+      overflow: hidden;
+    }
+
+    /* Dacă tot ți se pare stins, poți activa acest filtru (debifat acum) */
+    /* body { filter: none; } */
+    /* Exemplu de ajustare (decomentează pentru a aplica): */
+    /* body { filter: brightness(1.08) contrast(1.12) saturate(1.15); } */
+
+    /* imaginea de fundal ca element <img> — păstrează complet imaginea (no crop) */
+    #bg {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;     /* IMPORTANT: afișează toată imaginea, fără crop */
+      object-position: center;
+      z-index: -1;
+      pointer-events: none;
+      background-color: inherit;
+    }
+
+    /* Loader / text peste imagine */
+    #loaderBox {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 8px;
+      border-radius: 6px;
+    }
+    #loaderMessage {
+      margin-top: 12px;
+      font-size: 18px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    }
+
+    /* Opțional: la ecrane mari, poți folosi cover în loc de contain */
+    @media (min-width: 900px) {
+      #bg { object-fit: cover; } /* pe desktop e ok să ocupe totul */
+    }
+  </style>
+</head>
+<body>
+  <!-- imaginea pătrată: web-logo.png (sau web-logo@2x.png în srcset) -->
+  <img id="bg" src="web-logo.png" srcset="web-logo.png 1x, web-logo@2x.png 2x" alt="background">
+
+  <div id="loaderBox" role="status" aria-live="polite">
+    <div id="loaderMessage">Se încarcă…</div>
+  </div>
+
+  <script>
+    const AS_URL_BASE = "https://script.google.com/macros/s/AKfycbzYMa80nvs7GLpZKAWQZpPVKzwSXsr09HyAQxe67CnZpcBYIBY5UtxNJ9buIbC2S5QGAQ/exec";
+    var url = document.location.href;
+    var k = url.substr(url.lastIndexOf("k=")+2);
+
+    if(k){
+      fetch(AS_URL_BASE+'?k='+k)
+      .then(r => r.text())
+      .then((r) => {
+        console.log(r);
+        if(r){
+          document.location.replace(r);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('loaderMessage').textContent = 'A apărut o eroare. Încearcă din nou.';
+      })
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+<!--<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <title>Redirect cu fundal personalizat</title>
   <style>
     /* Fundal full-screen: imaginea redenumită fără spații (ex: web-logo.png) */
     html, body { height: 100%; margin: 0; }
@@ -22,10 +113,7 @@
       overflow: hidden;
     }
 
-    /* Dacă tot ți se pare stins, poți activa acest filtru (debifat acum) */
-    /* body { filter: none; } */
-    /* Exemplu de ajustare (decomentează pentru a aplica): */
-    /* body { filter: brightness(1.08) contrast(1.12) saturate(1.15); } */
+    
 
     /* Loader text sau imagine mică afișată peste fundal */
     #loaderBox {
