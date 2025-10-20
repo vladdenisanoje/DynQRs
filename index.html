@@ -4,6 +4,79 @@
   <meta charset="utf-8">
   <title>Redirect cu fundal personalizat</title>
   <style>
+    /* Fundal full-screen: imaginea redenumită fără spații (ex: web-logo.png) */
+    html, body { height: 100%; margin: 0; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-image: url('Web Logo.png'); /* redenumește Web Logo.png -> web-logo.png */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Dacă tot ți se pare stins, poți activa acest filtru (debifat acum) */
+    /* body { filter: none; } */
+    /* Exemplu de ajustare (decomentează pentru a aplica): */
+    /* body { filter: brightness(1.08) contrast(1.12) saturate(1.15); } */
+
+    /* Loader text sau imagine mică afișată peste fundal */
+    #loaderBox {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+    #loaderMessage {
+      margin-top: 12px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <!-- overlay eliminat ca să nu întunece imaginea -->
+  <div id="loaderBox" role="status" aria-live="polite">
+    <div id="loaderMessage">Se încarcă…</div>
+  </div>
+
+  <script>
+    const AS_URL_BASE = "https://script.google.com/macros/s/AKfycbzYMa80nvs7GLpZKAWQZpPVKzwSXsr09HyAQxe67CnZpcBYIBY5UtxNJ9buIbC2S5QGAQ/exec";
+    var url = document.location.href;
+    var k = url.substr(url.lastIndexOf("k=")+2);
+
+    if(k){
+      fetch(AS_URL_BASE+'?k='+k)
+      .then(r => r.text())
+      .then((r) => {
+        console.log(r);
+        if(r){
+          document.location.replace(r);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('loaderMessage').textContent = 'A apărut o eroare. Încearcă din nou.';
+      })
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+<!--<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <title>Redirect cu fundal personalizat</title>
+  <style>
     /* Fundal full-screen: pune aici calea la poza ta */
     body {
       margin: 0;
@@ -46,7 +119,7 @@
     <!-- Poți pune aici o mini imagine sau text --
     <img src="path/to/small-loader.png" alt="Loading..." style="width:96px; height:auto;">
     <div id="loaderMessage">Se încarcă…</div>
-  </div>  -->
+  </div>  -- >
 
   <script>
     const AS_URL_BASE = "https://script.google.com/macros/s/AKfycbzYMa80nvs7GLpZKAWQZpPVKzwSXsr09HyAQxe67CnZpcBYIBY5UtxNJ9buIbC2S5QGAQ/exec";
@@ -71,4 +144,4 @@
     }
   </script>
 </body>
-</html>
+</html> -->
